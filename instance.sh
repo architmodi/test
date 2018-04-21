@@ -2,7 +2,7 @@
 
 RELEASE=$(cat /etc/yum.repos.d/latest-installed | awk '{print $1}')
 
-source ~/overcloudrc
+source /home/stack/overcloudrc
 
 if [ "$RELEASE" -lt 12 ];then
   neutron net-create private
