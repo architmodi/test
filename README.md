@@ -1,1 +1,1 @@
-This is to creat a cirros instance and attach a floating ip for all RHOS versions
+This is to create a cirros instance and attach a floating ip to it for all RHOS versions
