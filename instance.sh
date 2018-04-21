@@ -70,4 +70,4 @@ fi
 
 nova console-log test-$COUNT 
 openstack server list
-COUNT=$(COUNT+1))
+COUNT=$(COUNT+1)
