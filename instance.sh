@@ -40,7 +40,7 @@ else
   openstack security group rule create $SECID --protocol icmp --dst-port -1 --remote-ip 0.0.0.0/0
 fi
 
-sudo wget http://rhos-qe-mirror-tlv.usersys.redhat.com/images/cirros-0.3.4-x86_64-disk.img
+wget http://rhos-qe-mirror-tlv.usersys.redhat.com/images/cirros-0.3.4-x86_64-disk.img
 
 if [ "$RELEASE" -lt 10 ];then
   glance image-create --name cirros --disk-format qcow2 --container-format bare --file cirros-0.3.4-x86_64-disk.img
