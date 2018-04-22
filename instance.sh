@@ -15,8 +15,7 @@ then
     openstack subnet set --dns-nameserver 10.34.32.1 --dns-nameserver 10.34.32.3 private
   fi
   echo "****************************************Network create completed**************************************************"
-  export SID=
-  export SID=$(neutron net-list | grep private | awk '{print $2}')
+  export SID=$(neutron net-list | grep private | awk '{print $2}' | head -n 1)
 
   if [ "$RELEASE" -eq 7 ] || [ "$RELEASE" -eq 9 ] || [ "$RELEASE" -eq 12 ];then
     neutron router-create testrouter
