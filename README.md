@@ -8,4 +8,5 @@ Steps to run the script:
 
 2. source instance.sh (OR . instance.sh)
 
+Todo list: Work on creating a more robust and universal script to eliminate single session execution
 Disclaimer: Use at your own risk
