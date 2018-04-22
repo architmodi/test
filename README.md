@@ -1,1 +1,7 @@
-This is to create a cirros instance and attach a floating ip to it for all RHOS versions
+This script creates multiple instances with floating ip attached, for all RHOS versions.
+
+Steps to use:
+
+1. wget https://github.com/redhattower/test/blob/master/instance.sh
+
+2. source instance.sh (OR . instance.sh)
