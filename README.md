@@ -14,6 +14,6 @@ Steps to run the script:
 ###########################################################################################
 ###########################################################################################
 
-Todo list: Work on creating a more robust and universal script to eliminate single session execution while retaining and/or decreasing machine cycles used to run the script
+Todo list: Work on creating a more robust and universal script to eliminate single session execution while retaining and/or decreasing machine cycles used to run the script. Also, add new features TBD.
 
 Disclaimer: Use at your own risk
