@@ -1,4 +1,4 @@
-This script creates multiple instances with floating ip attached, for all RHOS versions.
+This script creates one or more instances with floating ip attached, for all RHOS versions.
 
 Steps to run the script:
 
