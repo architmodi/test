@@ -50,10 +50,10 @@ then
   fi
   echo "****************************************Image uploaded to glance**************************************************"
   nova flavor-create m1.tiny auto 512 1 1 --is-public True
-  export COUNT=1
+  export COUNTVAR=1
 fi
 
-nova boot --poll --image cirros --flavor m1.tiny test-$COUNT --nic net-id=$SID
+nova boot --poll --image cirros --flavor m1.tiny test-$COUNTVAR --nic net-id=$SID
 
 export IP=
 if [ "$RELEASE" -eq 7 ] || [ "$RELEASE" -eq 9 ];then
