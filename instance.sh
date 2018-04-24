@@ -3,14 +3,14 @@
 RELEASE=$(cat /etc/yum.repos.d/latest-installed | awk '{print $1}')
 
 source /home/stack/overcloudrc
-if [ -z "$`openstack network list | grep private`" ];then
+if [ -z "`openstack network list | grep private`" ];then
   openstack network create private
   openstack subnet create --gateway 192.168.100.1 --dhcp --network private --subnet-range 192.168.100.0/24 private
   openstack subnet set --dns-nameserver 10.34.32.1 --dns-nameserver 10.34.32.3 private
   echo "****************************************Private network created****************************************************"
 fi
 SID=$(neutron net-list | grep private | awk '{print $2}' | head -n 1)
-if [ -z "$`openstack router list | grep testrouter`" ];then
+if [ -z "`openstack router list | grep testrouter`" ];then
   if [ "$RELEASE" -eq 7 ] || [ "$RELEASE" -eq 9 ] || [ "$RELEASE" -eq 12 ];then
     neutron router-create testrouter
     neutron router-gateway-set testrouter nova
@@ -38,11 +38,11 @@ fi
 
 if [ ! -f cirros-0.3.4-x86_64-disk.img ];then wget http://rhos-qe-mirror-tlv.usersys.redhat.com/images/cirros-0.3.4-x86_64-disk.img;fi
 
-if [ -z "$`openstack image list | grep testrouter`" ];then
+if [ -z "`openstack image list | grep cirros`" ];then
   openstack image create cirros --disk-format qcow2 --container-format bare --file cirros-0.3.4-x86_64-disk.img
   echo "****************************************Image uploaded to glance**************************************************"
 fi
-if [ -z "$`openstack flavor list | grep m1.tiny`" ];then
+if [ -z "`openstack flavor list | grep m1.tiny`" ];then
   openstack flavor create --public m1.tiny --id auto --ram 512 --disk 1 --vcpus 1
 fi
 
