@@ -9,7 +9,7 @@ if [ -z "`openstack network list | grep private`" ];then
   openstack subnet set --dns-nameserver 10.34.32.1 --dns-nameserver 10.34.32.3 private
   echo "****************************************Private network created****************************************************"
 fi
-SID=$(neutron net-list | grep private | awk '{print $2}' | head -n 1)
+SID=$(neutron net-list | awk '/private/ {print $2}' | head -n 1)
 if [ -z "`openstack router list | grep testrouter`" ];then
   if [ "$RELEASE" -eq 7 ] || [ "$RELEASE" -eq 9 ] || [ "$RELEASE" -eq 12 ];then
     neutron router-create testrouter
@@ -26,7 +26,7 @@ if [ -z "`openstack router list | grep testrouter`" ];then
   fi
   echo "****************************************Router and subnet created*************************************************"
 fi
-SECID=$(openstack security group list | grep `openstack project list | grep admin | awk '{print $2}'` | head -n 1 | awk '{print $2}')
+SECID=$(openstack security group list | grep `openstack project show admin -f value -c id` | head -n 1 | awk '{print $2}')
 
 if [ "$RELEASE" -lt 12 ];then
   nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0 2>/dev/null
@@ -50,13 +50,13 @@ COUNTVAR=$RANDOM
 openstack server create --image cirros --flavor m1.tiny test-$COUNTVAR --nic net-id=$SID --wait
 
 if [ "$RELEASE" -eq 7 ] || [ "$RELEASE" -eq 9 ];then
-  IP=$(neutron floatingip-create nova | awk -F '|' '/floating_ip/ { print $3 }')
+  IP=$(neutron floatingip-create public -f value -c floating_ip_address)
   nova floating-ip-associate test-$COUNTVAR $IP
 elif [ "$RELEASE" -gt 11 ];then
-  IP=$(neutron floatingip-create nova | awk -F '|' '/floating_ip/ { print $3 }')
+  IP=$(neutron floatingip-create nova -f value -c floating_ip_address)
   openstack server add floating ip test-$COUNTVAR $IP
 else
-  IP=$(neutron floatingip-create public | awk -F '|' '/floating_ip/ { print $3 }')
+  IP=$(neutron floatingip-create public -f value -c floating_ip_address)
   nova floating-ip-associate test-$COUNTVAR $IP
 fi
 
