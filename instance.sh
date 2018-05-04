@@ -39,15 +39,18 @@ fi
 if [ ! -f cirros-0.3.4-x86_64-disk.img ];then wget http://rhos-qe-mirror-tlv.usersys.redhat.com/images/cirros-0.3.4-x86_64-disk.img;fi
 
 if [ -z "`openstack image list | grep cirros`" ];then
-  openstack image create cirros --disk-format qcow2 --container-format bare --file cirros-0.3.4-x86_64-disk.img
+  IMGNAME=cirros
+  openstack image create $IMGNAME --disk-format qcow2 --container-format bare --file cirros-0.3.4-x86_64-disk.img
   echo "****************************************Image uploaded to glance**************************************************"
+else
+  IMGNAME=$(openstack image list -f value -c Name | grep cirros | head -n 1)
 fi
 if [ -z "`openstack flavor list | grep m1.tiny`" ];then
   openstack flavor create --public m1.tiny --id auto --ram 512 --disk 1 --vcpus 1
 fi
 
 COUNTVAR=$RANDOM
-openstack server create --image cirros --flavor m1.tiny test-$COUNTVAR --nic net-id=$SID --wait
+openstack server create --image $IMGNAME --flavor m1.tiny test-$COUNTVAR --nic net-id=$SID --wait
 
 if [ "$RELEASE" -eq 7 ] || [ "$RELEASE" -eq 9 ];then
   IP=$(neutron floatingip-create public -f value -c floating_ip_address)
