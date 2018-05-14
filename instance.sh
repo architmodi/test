@@ -53,7 +53,7 @@ COUNTVAR=$RANDOM
 openstack server create --image $IMGNAME --flavor m1.tiny test-$COUNTVAR --nic net-id=$SID --wait
 
 if [ "$RELEASE" -eq 7 ] || [ "$RELEASE" -eq 9 ];then
-  IP=$(neutron floatingip-create public -f value -c floating_ip_address)
+  IP=$(neutron floatingip-create nova -f value -c floating_ip_address)
   nova floating-ip-associate test-$COUNTVAR $IP
 elif [ "$RELEASE" -gt 11 ];then
   IP=$(neutron floatingip-create nova -f value -c floating_ip_address)

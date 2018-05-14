@@ -14,7 +14,7 @@ if [ -z "`openstack network list | grep private`" ];then
   openstack subnet set --dns-nameserver 10.34.32.1 --dns-nameserver 10.34.32.3 private
   echo "****************************************Private network created****************************************************"
 fi
-SID=$(neutron net-list | grep private | awk '{print $2}' | head -n 1)
+SID=$(neutron net-list | awk '/private/ {print $2}' | head -n 1)
 if [ -z "`openstack router list | grep testrouter`" ];then
   if [ "$RELEASE" -eq 7 ] || [ "$RELEASE" -eq 9 ] || [ "$RELEASE" -eq 12 ];then
     neutron router-create testrouter
@@ -31,7 +31,7 @@ if [ -z "`openstack router list | grep testrouter`" ];then
   fi
   echo "****************************************Router and subnet created*************************************************"
 fi
-SECID=$(openstack security group list | grep `openstack project list | grep admin | awk '{print $2}'` | head -n 1 | awk '{print $2}')
+SECID=$(openstack security group list | grep `openstack project show admin -f value -c id` | head -n 1 | awk '{print $2}')
 
 if [ "$RELEASE" -lt 12 ];then
   nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0 2>/dev/null
@@ -41,10 +41,10 @@ else
   openstack security group rule create $SECID --protocol icmp --dst-port -1 --remote-ip 0.0.0.0/0 2>/dev/null
 fi
 
-if [ ! -f rhel-guest-image-7.6-24.x86_64.qcow2 ];then wget http://download.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/7.6/24/images/rhel-guest-image-7.6-24.x86_64.qcow2;fi
+if [ ! -f rhel-guest-image-7.5-146.x86_64.qcow2 ];then wget http://download-node-02.eng.bos.redhat.com/released/RHEL-7/7.5/Server/x86_64/images/rhel-guest-image-7.5-146.x86_64.qcow2;fi
 
 if [ -z "`openstack image list | grep rhel`" ];then
-  openstack image create rhel --disk-format qcow2 --container-format bare --file rhel-guest-image-7.6-24.x86_64.qcow2
+  openstack image create rhel --disk-format qcow2 --container-format bare --file rhel-guest-image-7.5-146.x86_64.qcow2
   echo "****************************************Image uploaded to glance**************************************************"
 fi
 if [ -z "`openstack flavor list | grep m1.custom`" ];then
@@ -59,13 +59,13 @@ COUNTVAR=$RANDOM
 openstack server create --image rhel --flavor m1.custom --key-name mykey test-$COUNTVAR --nic net-id=$SID --wait
 
 if [ "$RELEASE" -eq 7 ] || [ "$RELEASE" -eq 9 ];then
-  IP=$(neutron floatingip-create nova | awk -F '|' '/floating_ip/ { print $3 }')
+  IP=$(neutron floatingip-create nova -f value -c floating_ip_address) 
   nova floating-ip-associate test-$COUNTVAR $IP
 elif [ "$RELEASE" -gt 11 ];then
-  IP=$(neutron floatingip-create nova | awk -F '|' '/floating_ip/ { print $3 }')
+  IP=$(neutron floatingip-create nova -f value -c floating_ip_address)
   openstack server add floating ip test-$COUNTVAR $IP
 else
-  IP=$(neutron floatingip-create public | awk -F '|' '/floating_ip/ { print $3 }')
+  IP=$(neutron floatingip-create public -f value -c floating_ip_address)
   nova floating-ip-associate test-$COUNTVAR $IP
 fi
 
