@@ -36,11 +36,11 @@ else
   openstack security group rule create $SECID --protocol icmp --dst-port -1 --remote-ip 0.0.0.0/0 2>/dev/null
 fi
 
-if [ ! -f cirros-0.3.4-x86_64-disk.img ];then wget http://rhos-qe-mirror-tlv.usersys.redhat.com/images/cirros-0.3.4-x86_64-disk.img;fi
+if [ ! -f cirros-0.3.5-x86_64-disk.img ];then wget http://rhos-qe-mirror-tlv.usersys.redhat.com/images/cirros-0.3.5-x86_64-disk.img;fi
 
 if [ -z "`openstack image list | grep cirros`" ];then
   IMGNAME=cirros
-  openstack image create $IMGNAME --disk-format qcow2 --container-format bare --file cirros-0.3.4-x86_64-disk.img
+  openstack image create $IMGNAME --disk-format qcow2 --container-format bare --file cirros-0.3.5-x86_64-disk.img
   echo "****************************************Image uploaded to glance**************************************************"
 else
   IMGNAME=$(openstack image list -f value -c Name | grep cirros | head -n 1)
