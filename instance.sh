@@ -2,7 +2,7 @@
 
 RELEASE=$(cat /etc/yum.repos.d/latest-installed | awk '{print $1}')
 
-source /home/stack/overcloudrc
+source /home/stack/overcloudrc.v3
 if [ -z "`openstack network list | grep private`" ];then
   openstack network create private
   openstack subnet create --gateway 192.168.100.1 --dhcp --network private --subnet-range 192.168.100.0/24 private
